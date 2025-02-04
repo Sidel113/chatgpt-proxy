@@ -9,7 +9,7 @@ app.use(express.json());
 app.use(cors()); // Allows all origins (you can customize this if needed)
 
 // Fetch API Key from environment variables
-const API_KEY = process.env.OPENAI_API_KEY;
+const API_KEY = process.env.NGOuGlkzIW1ld8jrKQLperYuXhfx44K_Dws1OD7wUapTTZCAWyMRTHQqALiE0vqBWusPl8amyVT3BlbkFJdKqonX8tYweJLkjTN3G7KIiKlAs_oHkhqvdMoccjCMQJplF6TcZmmnefQUP8hPsqPDrnKWsrUA;
 
 if (!API_KEY) {
     console.error("❌ Error: Missing OPENAI_API_KEY environment variable.");
