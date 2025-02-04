@@ -3,11 +3,20 @@ const axios = require("axios");
 const cors = require("cors");
 
 const app = express();
+
+// Middleware
 app.use(express.json());
-app.use(cors());
+app.use(cors()); // Allows all origins (you can customize this if needed)
 
-const API_KEY = process.env.OPENAI_API_KEY; // Fetch API Key from environment variables
+// Fetch API Key from environment variables
+const API_KEY = process.env.OPENAI_API_KEY;
 
+if (!API_KEY) {
+    console.error("❌ Error: Missing OPENAI_API_KEY environment variable.");
+    process.exit(1); // Stop server if API key is missing
+}
+
+// Proxy Route
 app.post("/proxy", async (req, res) => {
     try {
         const response = await axios.post(
@@ -22,9 +31,19 @@ app.post("/proxy", async (req, res) => {
         );
         res.json(response.data);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error("❌ API Request Error:", error.response?.data || error.message);
+        res.status(error.response?.status || 500).json({
+            error: "Error fetching response from OpenAI",
+            details: error.response?.data || error.message,
+        });
     }
 });
 
+// Health Check Route (for Render)
+app.get("/healthz", (req, res) => {
+    res.status(200).send("OK");
+});
+
+// Start Server
 const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => console.log(`Proxy running on port ${PORT}`));
+app.listen(PORT, () => console.log(`✅ Proxy running on port ${PORT}`));
